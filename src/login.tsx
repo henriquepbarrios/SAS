@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; // Importação necessária para navegar
+import { useNavigate } from 'react-router-dom';
 
-// --- Global Styles (Reset e Tipografia) ---
+// --- Global Styles (Identidade VEDD) ---
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -15,20 +15,23 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
     overflow: hidden; 
+    background-color: #0B0D10; /* Cor da sidebar do print */
     font-family: 'Inter', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
+    color: #FFFFFF;
   }
 `;
 
-// --- Variáveis de Design ---
+// --- Variáveis de Design Extraídas da Imagem ---
 const Colors = {
-  primary: '#4F46E5', 
-  primaryHover: '#4338CA',
-  bgGradient: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
-  textMain: '#1E293B',
-  textMuted: '#64748B',
-  white: '#FFFFFF',
-  border: '#E2E8F0',
+  primary: '#0046FF',      // Azul vibrante do logo e botões
+  primaryHover: '#0036C7',
+  bgDark: '#0B0D10',       // Fundo mais escuro
+  cardBg: '#16191E',       // Fundo do card de login
+  inputBg: '#1E2229',      // Fundo dos inputs
+  textMain: '#FFFFFF',     
+  textMuted: '#94A3B8',    
+  border: '#2D343F',       // Bordas discretas do sistema dark
 };
 
 // --- Estilos de UI ---
@@ -38,20 +41,18 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${Colors.bgGradient};
+  background: radial-gradient(circle at center, #1a1d23 0%, #0b0d10 100%);
   padding: 20px;
 `;
 
 const LoginCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: ${Colors.cardBg};
   padding: 3rem 2.5rem;
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  border: 1px solid ${Colors.border};
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   width: 100%;
-  max-width: 420px;
+  max-width: 400px;
 `;
 
 const Header = styled.div`
@@ -59,35 +60,28 @@ const Header = styled.div`
   margin-bottom: 2.5rem;
 `;
 
-const LogoIcon = styled.div`
-  width: 52px;
-  height: 52px;
-  background: ${Colors.primary};
-  border-radius: 14px;
-  margin: 0 auto 1.5rem;
+const LogoWrapper = styled.div`
+  margin-bottom: 1rem;
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: 800;
-  font-size: 1rem;
-  text-transform: uppercase;
-  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+  
+  svg {
+    filter: drop-shadow(0px 0px 12px rgba(0, 70, 255, 0.4));
+  }
 `;
 
 const Title = styled.h2`
   color: ${Colors.textMain};
-  font-size: 1.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
   margin: 0;
   letter-spacing: -0.025em;
-  font-weight: 800;
-  text-transform: uppercase;
 `;
 
 const Subtitle = styled.p`
   color: ${Colors.textMuted};
   margin-top: 0.5rem;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
 `;
 
 const FormGroup = styled.div`
@@ -98,39 +92,38 @@ const FormGroup = styled.div`
 
 const Label = styled.label`
   display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: ${Colors.textMain};
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: ${Colors.textMuted};
   margin-bottom: 0.5rem;
-  margin-left: 4px;
+  margin-left: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 `;
 
 const InputWrapper = styled.div`
   position: relative;
   width: 100%;
-  display: flex;
-  align-items: center;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 0.8rem 1.25rem;
-  padding-right: 3.5rem; 
-  background: ${Colors.white};
-  border: 1.5px solid ${Colors.border};
-  border-radius: 14px;
+  padding: 0.8rem 1rem;
+  background: ${Colors.inputBg};
+  border: 1px solid ${Colors.border};
+  border-radius: 8px;
   font-size: 1rem;
   color: ${Colors.textMain};
   transition: all 0.2s ease-in-out;
   outline: none;
 
   &::placeholder {
-    color: #94A3B8;
+    color: #4A5568;
   }
 
   &:focus {
     border-color: ${Colors.primary};
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    background: #232831;
   }
 `;
 
@@ -143,12 +136,9 @@ const TogglePasswordButton = styled.button`
   border: none;
   color: ${Colors.textMuted};
   cursor: pointer;
-  padding: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
   transition: color 0.2s;
-  z-index: 2;
 
   &:hover {
     color: ${Colors.primary};
@@ -161,12 +151,11 @@ const LoginButton = styled(motion.button)`
   background: ${Colors.primary};
   color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   margin-top: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
   transition: background 0.2s;
 
   &:hover {
@@ -176,7 +165,7 @@ const LoginButton = styled(motion.button)`
 
 const FooterLink = styled.div`
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   font-size: 0.875rem;
   color: ${Colors.textMuted};
 
@@ -196,15 +185,11 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
-  const navigate = useNavigate(); // Hook para navegação
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Log para você conferir no console do navegador (F12)
     console.log("Login submetido:", { email, password });
-
-    // Como você está sem backend, redirecionamos direto para o dashboard
     navigate('/dashboard');
   };
 
@@ -213,14 +198,18 @@ const Login: React.FC = () => {
       <GlobalStyle />
       <Container>
         <LoginCard
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
           <Header>
-            <LogoIcon>LOGO</LogoIcon>
-            <Title>NOME</Title>
-            <Subtitle>Excelência em gestão e controle</Subtitle>
+            <LogoWrapper>
+              <svg width="50" height="50" viewBox="0 0 44 44" fill="none">
+                <path d="M10 10L22 34L34 10" stroke={Colors.primary} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </LogoWrapper>
+            <Title>Acesse sua conta</Title>
+            <Subtitle>Bem-vindo ao SAS</Subtitle>
           </Header>
           
           <form onSubmit={handleSubmit}>
@@ -228,7 +217,7 @@ const Login: React.FC = () => {
               <Label>E-mail corporativo</Label>
               <Input 
                 type="email" 
-                placeholder="nome@clinica.com" 
+                placeholder="nome@empresa.com" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -248,7 +237,6 @@ const Login: React.FC = () => {
                 <TogglePasswordButton 
                   type="button" 
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
                 >
                   {showPassword ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -266,16 +254,16 @@ const Login: React.FC = () => {
             </FormGroup>
 
             <LoginButton 
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ translateY: -2 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
             >
-              Acessar Painel
+              Entrar no Sistema
             </LoginButton>
           </form>
 
           <FooterLink>
-            Problemas com acesso? <a href="#">Contatar Suporte</a>
+            Esqueceu sua senha? <a href="#">Recuperar acesso</a>
           </FooterLink>
         </LoginCard>
       </Container>

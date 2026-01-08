@@ -2,55 +2,81 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+// --- Variáveis de Identidade (Alinhadas ao Login/Dashboard) ---
+const Colors = {
+  primary: '#0046FF',      // Azul vibrante do logo
+  primarySoft: 'rgba(0, 70, 255, 0.15)',
+  bgSidebar: '#08090A',    // Preto mais profundo para contraste
+  textMain: '#FFFFFF',
+  textMuted: '#64748B',    // Texto inativo
+  navHover: '#16191E',     // Cor de hover igual ao fundo dos cards
+  border: '#1E2229'
+};
+
 const SidebarContainer = styled.aside`
   width: 260px;
-  background: #FFFFFF;
-  border-right: 1px solid #E2E8F0;
+  background: ${Colors.bgSidebar};
+  border-right: 1px solid ${Colors.border};
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: 24px 16px; /* Ajustado para melhor respiro */
   position: fixed;
   height: 100vh;
   left: 0;
   top: 0;
-  overflow-y: auto; // Garante scroll se a lista crescer
+  z-index: 100;
+  overflow-y: auto;
+
+  /* Custom Scrollbar para manter o visual dark */
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: ${Colors.border}; border-radius: 10px; }
 `;
 
 const Logo = styled.div`
   font-weight: 800;
-  font-size: 1.5rem;
-  color: #4F46E5;
-  margin-bottom: 32px;
+  font-size: 1.4rem;
+  color: ${Colors.textMain};
+  margin-bottom: 40px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  padding-left: 12px;
+  letter-spacing: 1px;
 `;
 
 const SectionTitle = styled.p`
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  color: #94A3B8;
+  color: ${Colors.textMuted};
   font-weight: 700;
-  margin: 20px 0 10px 16px;
-  letter-spacing: 0.05em;
+  margin: 24px 0 8px 12px;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
 `;
 
 const NavItem = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 16px;
-  border-radius: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
   cursor: pointer;
-  margin-bottom: 4px;
-  color: ${props => props.active ? '#4F46E5' : '#64748B'};
-  background: ${props => props.active ? '#EEF2FF' : 'transparent'};
-  font-weight: 600;
-  transition: all 0.2s;
+  margin-bottom: 2px;
+  color: ${props => props.active ? Colors.textMain : Colors.textMuted};
+  background: ${props => props.active ? Colors.primarySoft : 'transparent'};
+  font-weight: ${props => props.active ? '600' : '500'};
+  border-left: 3px solid ${props => props.active ? Colors.primary : 'transparent'};
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 1.1rem;
+    filter: ${props => props.active ? 'grayscale(0)' : 'grayscale(1) opacity(0.7)'};
+  }
 
   &:hover {
-    background: #F1F5F9;
-    color: #4F46E5;
+    background: ${props => props.active ? Colors.primarySoft : Colors.navHover};
+    color: ${Colors.textMain};
+    i { filter: grayscale(0) opacity(1); }
   }
 `;
 
@@ -82,7 +108,18 @@ const Sidebar: React.FC = () => {
   return (
     <SidebarContainer>
       <Logo>
-        <div style={{ width: 32, height: 32, background: '#4F46E5', borderRadius: 8 }} />
+        <div style={{ 
+          width: 32, 
+          height: 32, 
+          background: Colors.primary, 
+          borderRadius: 8,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: `0 0 15px ${Colors.primary}66`
+        }}>
+          <span style={{ fontSize: '12px', color: 'white' }}>V</span>
+        </div>
         SAS
       </Logo>
 

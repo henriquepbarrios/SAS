@@ -1,29 +1,60 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from './sidebar';
+
+// --- Variáveis de Design (Alinhadas com o Login) ---
+const Colors = {
+  primary: '#0046FF',      
+  primaryHover: '#0036C7',
+  bgDark: '#0B0D10',       // Fundo principal (conforme sua imagem)
+  cardBg: '#16191E',       // Fundo dos cards
+  inputBg: '#1E2229',      // Fundo de itens secundários
+  textMain: '#FFFFFF',     
+  textMuted: '#94A3B8',    
+  border: '#2D343F',       // Bordas sutis
+  accent: {
+    cabelo: '#0046FF',
+    barba: '#EC4899',
+    estetica: '#8B5CF6',
+    produtos: '#10B981'
+  }
+};
 
 const GlobalStyle = createGlobalStyle`
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background-color: #F8FAFC; font-family: 'Inter', sans-serif; color: #1E293B; }
+  body { 
+    background-color: ${Colors.bgDark}; 
+    font-family: 'Inter', -apple-system, sans-serif; 
+    color: ${Colors.textMain}; 
+    -webkit-font-smoothing: antialiased;
+  }
 `;
 
-// --- Estilos do Layout ---
+// --- Layout ---
 const Container = styled.div` display: flex; min-height: 100vh; `;
 
 const MainContent = styled.main`
   flex: 1;
   margin-left: 260px;
   padding: 40px;
+  background: radial-gradient(circle at top right, #16191e 0%, #0b0d10 100%);
+`;
+
+// --- Componentes de UI Dark ---
+const Card = styled.div`
+  background: ${Colors.cardBg};
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid ${Colors.border};
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 `;
 
 const SectionTitle = styled.h2`
   font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 20px;
-  color: #1E293B;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin-bottom: 24px;
+  color: ${Colors.textMain};
 `;
 
 const Grid = styled.div<{ cols?: number }>`
@@ -33,140 +64,95 @@ const Grid = styled.div<{ cols?: number }>`
   margin-bottom: 32px;
 `;
 
-// --- Estilos de Componentes (Cards) ---
-const Card = styled.div`
-  background: #FFF;
-  padding: 24px;
-  border-radius: 20px;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-`;
-
 const CategoryCard = styled.div<{ borderColor: string }>`
-  background: #FFF;
+  background: ${Colors.cardBg};
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid #E2E8F0;
-  border-left: 5px solid ${props => props.borderColor};
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  span { color: #64748B; font-size: 0.85rem; font-weight: 600; }
-  strong { font-size: 1.4rem; color: #1E293B; }
+  border: 1px solid ${Colors.border};
+  border-left: 4px solid ${props => props.borderColor};
+  
+  span { color: ${Colors.textMuted}; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  strong { font-size: 1.5rem; color: ${Colors.textMain}; display: block; margin-top: 4px; }
 `;
 
-const AppointmentItem = styled.div`
+const AppointmentItem = styled(motion.div)`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  border-radius: 16px;
-  background: #F8FAFC;
-  border: 1px solid #F1F5F9;
+  border-radius: 12px;
+  background: ${Colors.inputBg};
+  border: 1px solid ${Colors.border};
   margin-bottom: 12px;
-  transition: all 0.2s;
-  &:hover { transform: translateX(5px); background: #FFF; border-color: #4F46E5; }
+  
+  &:hover { border-color: ${Colors.primary}; background: #232831; }
 `;
 
 const TimeTag = styled.div`
-  background: #EEF2FF;
-  color: #4F46E5;
-  padding: 8px 12px;
-  border-radius: 10px;
+  background: rgba(0, 70, 255, 0.15);
+  color: ${Colors.primary};
+  padding: 6px 12px;
+  border-radius: 8px;
   font-weight: 700;
-  min-width: 65px;
-  text-align: center;
+  font-size: 0.9rem;
+  border: 1px solid rgba(0, 70, 255, 0.3);
 `;
 
-const ActionButton = styled.button`
-  background: #4F46E5;
+const ActionButton = styled(motion.button)`
+  background: ${Colors.primary};
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
-  &:hover { background: #4338CA; }
+  &:hover { background: ${Colors.primaryHover}; }
+  &:disabled { background: #2D343F; color: #64748B; cursor: not-allowed; }
 `;
 
-// --- Estilos do Modal ---
-const ModalOverlay = styled.div`
+// --- Modal Design ---
+const ModalOverlay = styled(motion.div)`
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(15, 23, 42, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex; justify-content: center; align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
 `;
 
-const ModalContent = styled.div`
-  background: white;
+const ModalContent = styled(motion.div)`
+  background: ${Colors.cardBg};
   width: 90%;
   max-width: 450px;
   border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-`;
-
-const SummaryBox = styled.div`
-  background: #F8FAFC;
-  border-radius: 16px;
-  padding: 20px;
-  margin: 20px 0;
-`;
-
-const PaymentGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 15px;
+  border: 1px solid ${Colors.border};
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 `;
 
 const PaymentOption = styled.button<{ selected: boolean }>`
-  padding: 12px;
+  padding: 14px;
   border-radius: 12px;
-  border: 2px solid ${props => props.selected ? '#4F46E5' : '#F1F5F9'};
-  background: ${props => props.selected ? '#EEF2FF' : 'white'};
-  color: ${props => props.selected ? '#4F46E5' : '#64748B'};
+  border: 1px solid ${props => props.selected ? Colors.primary : Colors.border};
+  background: ${props => props.selected ? 'rgba(0, 70, 255, 0.1)' : Colors.inputBg};
+  color: ${props => props.selected ? Colors.primary : Colors.textMuted};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
+  &:hover { border-color: ${Colors.primary}; }
 `;
 
 const Dashboard: React.FC = () => {
-  // --- Estados ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppt, setSelectedAppt] = useState<any>(null);
   const [paymentMethod, setPaymentMethod] = useState('');
 
-  // --- Mock de Dados ---
-  const proximosAtendimentos = [
-    { id: 1, hora: '14:30', cliente: 'Ana Paula Jardim', servico: 'Corte + Coloração', profissional: 'Bia Silva', preco: 180.00 },
-    { id: 2, hora: '15:15', cliente: 'Lucas Ferreira', servico: 'Barba Premium', profissional: 'Marco Vedovato', preco: 65.00 },
-    { id: 3, hora: '16:00', cliente: 'Beatriz Costa', servico: 'Manicure', profissional: 'Duda Ramos', preco: 45.00 },
-  ];
-
   const categorias = [
-    { label: 'Cabelo', valor: 'R$ 1.200', color: '#4F46E5' },
-    { label: 'Barbearia', valor: 'R$ 450', color: '#EC4899' },
-    { label: 'Estética', valor: 'R$ 890', color: '#8B5CF6' },
-    { label: 'Produtos', valor: 'R$ 320', color: '#10B981' },
+    { label: 'Cabelo', valor: 'R$ 1.200', color: Colors.accent.cabelo },
+    { label: 'Barbearia', valor: 'R$ 450', color: Colors.accent.barba },
+    { label: 'Estética', valor: 'R$ 890', color: Colors.accent.estetica },
+    { label: 'Produtos', valor: 'R$ 320', color: Colors.accent.produtos },
   ];
-
-  // --- Funções ---
-  const openCheckout = (appt: any) => {
-    setSelectedAppt(appt);
-    setIsModalOpen(true);
-  };
-
-  const closeCheckout = () => {
-    setIsModalOpen(false);
-    setSelectedAppt(null);
-    setPaymentMethod('');
-  };
 
   return (
     <Container>
@@ -174,28 +160,27 @@ const Dashboard: React.FC = () => {
       <Sidebar />
       
       <MainContent>
-        <header style={{ marginBottom: 40 }}>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Dashboard 💎</h1>
-          <p style={{ color: '#64748B' }}>Gestão da Unidade Centro</p>
+        <header style={{ marginBottom: 48 }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.025em' }}>Dashboard 💎</h1>
+          <p style={{ color: Colors.textMuted, marginTop: 4 }}>Gestão da Unidade Centro</p>
         </header>
 
-        {/* KPIs Principais */}
+        {/* KPIs Principais com novo contraste */}
         <Grid>
           <Card>
-            <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600 }}>Faturamento Hoje</p>
-            <h3 style={{ fontSize: '1.8rem', marginTop: 8 }}>R$ 1.840,50</h3>
+            <p style={{ color: Colors.textMuted, fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Faturamento Hoje</p>
+            <h3 style={{ fontSize: '2rem', marginTop: 12, fontWeight: 700 }}>R$ 1.840,50</h3>
           </Card>
           <Card>
-            <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600 }}>Ocupação da Agenda</p>
-            <h3 style={{ fontSize: '1.8rem', marginTop: 8 }}>78%</h3>
+            <p style={{ color: Colors.textMuted, fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Ocupação</p>
+            <h3 style={{ fontSize: '2rem', marginTop: 12, fontWeight: 700, color: Colors.primary }}>78%</h3>
           </Card>
           <Card>
-            <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600 }}>Novos Clientes</p>
-            <h3 style={{ fontSize: '1.8rem', marginTop: 8 }}>12</h3>
+            <p style={{ color: Colors.textMuted, fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Novos Clientes</p>
+            <h3 style={{ fontSize: '2rem', marginTop: 12, fontWeight: 700 }}>12</h3>
           </Card>
         </Grid>
 
-        {/* Resumo por Categoria (Usando o CategoryCard) */}
         <SectionTitle>Receita por Categoria</SectionTitle>
         <Grid cols={4}>
           {categorias.map((cat) => (
@@ -206,67 +191,76 @@ const Dashboard: React.FC = () => {
           ))}
         </Grid>
 
-        {/* Lista de Atendimentos */}
         <Card style={{ marginTop: '32px' }}>
           <SectionTitle>Próximos Clientes</SectionTitle>
-          {proximosAtendimentos.map((appt) => (
-            <AppointmentItem key={appt.id}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {[
+            { id: 1, hora: '14:30', cliente: 'Ana Paula Jardim', servico: 'Corte + Coloração', preco: 180 },
+            { id: 2, hora: '15:15', cliente: 'Lucas Ferreira', servico: 'Barba Premium', preco: 65 },
+          ].map((appt) => (
+            <AppointmentItem 
+              key={appt.id}
+              whileHover={{ x: 4 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <TimeTag>{appt.hora}</TimeTag>
                 <div>
-                  <p style={{ fontWeight: 700 }}>{appt.cliente}</p>
-                  <p style={{ fontSize: '0.85rem', color: '#64748B' }}>{appt.servico} • {appt.profissional}</p>
+                  <p style={{ fontWeight: 600, fontSize: '1rem' }}>{appt.cliente}</p>
+                  <p style={{ fontSize: '0.85rem', color: Colors.textMuted }}>{appt.servico}</p>
                 </div>
               </div>
-              <ActionButton onClick={() => openCheckout(appt)}>Checkout</ActionButton>
+              <ActionButton 
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { setSelectedAppt(appt); setIsModalOpen(true); }}
+              >
+                Checkout
+              </ActionButton>
             </AppointmentItem>
           ))}
         </Card>
 
-        {/* Modal de Checkout */}
-        {isModalOpen && (
-          <ModalOverlay onClick={closeCheckout}>
-            <ModalContent onClick={e => e.stopPropagation()}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Finalizar Venda</h2>
-              <p style={{ color: '#64748B', marginBottom: '10px' }}>Cliente: {selectedAppt?.cliente}</p>
-
-              <SummaryBox>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <span>{selectedAppt?.servico}</span>
-                  <strong>R$ {selectedAppt?.preco.toFixed(2)}</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '2px dashed #E2E8F0', paddingTop: '10px' }}>
-                  <span>Total</span>
-                  <strong style={{ color: '#4F46E5', fontSize: '1.4rem' }}>R$ {selectedAppt?.preco.toFixed(2)}</strong>
-                </div>
-              </SummaryBox>
-
-              <p style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '8px' }}>Forma de Pagamento</p>
-              <PaymentGrid>
-                {['PIX', 'Crédito', 'Débito', 'Dinheiro'].map(method => (
-                  <PaymentOption 
-                    key={method} 
-                    selected={paymentMethod === method}
-                    onClick={() => setPaymentMethod(method)}
-                  >
-                    {method}
-                  </PaymentOption>
-                ))}
-              </PaymentGrid>
-
-              <ActionButton 
-                style={{ width: '100%', marginTop: '24px', padding: '16px', fontSize: '1rem' }}
-                disabled={!paymentMethod}
-                onClick={() => {
-                  alert(`Recebido R$ ${selectedAppt?.preco.toFixed(2)} via ${paymentMethod}!`);
-                  closeCheckout();
-                }}
+        <AnimatePresence>
+          {isModalOpen && (
+            <ModalOverlay 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+            >
+              <ModalContent 
+                initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+                onClick={e => e.stopPropagation()}
               >
-                {paymentMethod ? 'Confirmar e Finalizar' : 'Selecione o Pagamento'}
-              </ActionButton>
-            </ModalContent>
-          </ModalOverlay>
-        )}
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 8 }}>Finalizar Venda</h2>
+                <p style={{ color: Colors.textMuted, marginBottom: 24 }}>Cliente: {selectedAppt?.cliente}</p>
+
+                <div style={{ background: Colors.inputBg, padding: 20, borderRadius: 16, marginBottom: 24 }}>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', color: Colors.textMuted }}>
+                      <span>Subtotal</span>
+                      <span>R$ {selectedAppt?.preco.toFixed(2)}</span>
+                   </div>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, paddingTop: 12, borderTop: `1px dashed ${Colors.border}` }}>
+                      <span style={{ fontWeight: 700 }}>Total</span>
+                      <strong style={{ color: Colors.primary, fontSize: '1.4rem' }}>R$ {selectedAppt?.preco.toFixed(2)}</strong>
+                   </div>
+                </div>
+
+                <Grid cols={2} style={{ gap: 10, marginBottom: 24 }}>
+                  {['PIX', 'Crédito', 'Débito', 'Dinheiro'].map(m => (
+                    <PaymentOption key={m} selected={paymentMethod === m} onClick={() => setPaymentMethod(m)}>
+                      {m}
+                    </PaymentOption>
+                  ))}
+                </Grid>
+
+                <ActionButton 
+                  style={{ width: '100%', padding: 16 }} 
+                  disabled={!paymentMethod}
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  {paymentMethod ? 'Confirmar Recebimento' : 'Selecione o Pagamento'}
+                </ActionButton>
+              </ModalContent>
+            </ModalOverlay>
+          )}
+        </AnimatePresence>
       </MainContent>
     </Container>
   );

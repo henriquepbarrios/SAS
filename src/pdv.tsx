@@ -3,13 +3,32 @@ import styled, { createGlobalStyle } from 'styled-components';
 import Sidebar from './sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// --- Variáveis de Design (Alinhadas ao SAS Dark) ---
+const Colors = {
+  primary: '#0046FF',
+  primaryHover: '#0036C7',
+  bgDark: '#0B0D10',
+  cardBg: '#16191E',
+  inputBg: '#1E2229',
+  textMain: '#FFFFFF',
+  textMuted: '#94A3B8',
+  border: '#2D343F',
+  danger: '#EF4444',
+  dangerBg: 'rgba(239, 68, 68, 0.1)'
+};
+
+const money = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+});
+
 const GlobalStyle = createGlobalStyle`
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { 
-    background-color: #F8FAFC; 
+    background-color: ${Colors.bgDark}; 
     font-family: 'Inter', sans-serif; 
-    color: #1E293B;
-    overflow: hidden; /* Evita scroll na página toda, usaremos nos containers */
+    color: ${Colors.textMain}; 
+    overflow: hidden;
   }
 `;
 
@@ -25,18 +44,12 @@ const MainContent = styled.main`
   gap: 24px;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-`;
-
 const ContentLayout = styled.div`
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr 380px;
   gap: 24px;
   flex: 1;
-  min-height: 0; /* Importante para o scroll interno funcionar */
+  min-height: 0;
 `;
 
 // --- Área de Produtos ---
@@ -49,71 +62,73 @@ const ProductsArea = styled.div`
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 14px 20px;
+  padding: 16px 20px;
   border-radius: 14px;
-  border: 1px solid #E2E8F0;
-  background: white;
+  border: 1px solid ${Colors.border};
+  background: ${Colors.cardBg};
+  color: white;
   font-size: 0.95rem;
   outline: none;
   transition: all 0.2s;
-  &:focus { border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+  &:focus { border-color: ${Colors.primary}; }
 `;
 
 const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 16px;
   overflow-y: auto;
   padding-right: 8px;
   
   &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+  &::-webkit-scrollbar-thumb { background: ${Colors.border}; border-radius: 10px; }
 `;
 
 const ProductCard = styled(motion.div)`
-  background: white;
-  padding: 16px;
+  background: ${Colors.cardBg};
+  padding: 20px;
   border-radius: 18px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid ${Colors.border};
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px;
+  gap: 12px;
   
   .icon-wrapper {
     width: 64px;
     height: 64px;
-    background: #F1F5F9;
-    border-radius: 14px;
+    background: ${Colors.inputBg};
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
+    border: 1px solid ${Colors.border};
   }
 
-  h4 { font-size: 0.85rem; font-weight: 600; color: #334155; line-height: 1.3; }
-  strong { color: #4F46E5; font-size: 1rem; font-weight: 800; }
+  h4 { font-size: 0.9rem; font-weight: 600; color: ${Colors.textMain}; line-height: 1.3; }
+  strong { color: ${Colors.primary}; font-size: 1.1rem; font-weight: 800; }
 
-  &:hover { border-color: #4F46E5; }
+  &:hover { border-color: ${Colors.primary}; background: #1c2026; }
 `;
 
 // --- Área do Carrinho ---
 const CartContainer = styled.div`
-  background: white;
+  background: ${Colors.cardBg};
   border-radius: 24px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid ${Colors.border};
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 `;
 
 const CartHeader = styled.div`
   padding: 24px;
-  border-bottom: 1px solid #F1F5F9;
-  h3 { font-size: 1.1rem; font-weight: 800; }
+  border-bottom: 1px solid ${Colors.border};
+  h3 { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
 `;
 
 const CartList = styled.div`
@@ -125,100 +140,100 @@ const CartList = styled.div`
   gap: 12px;
 
   &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+  &::-webkit-scrollbar-thumb { background: ${Colors.border}; border-radius: 10px; }
 `;
 
 const CartItem = styled(motion.div)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #F8FAFC;
+  padding: 12px 0;
+  border-bottom: 1px solid ${Colors.border};
 
   .info {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    span { font-size: 0.85rem; font-weight: 600; color: #1E293B; }
-    small { font-size: 0.75rem; color: #64748B; font-weight: 500; }
+    span { font-size: 0.9rem; font-weight: 600; color: ${Colors.textMain}; }
+    small { font-size: 0.8rem; color: ${Colors.textMuted}; font-weight: 500; }
   }
 
   button {
-    background: #FFF1F2;
-    color: #E11D48;
-    border: none;
-    width: 28px;
-    height: 28px;
+    background: ${Colors.dangerBg};
+    color: ${Colors.danger};
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.8rem;
-    &:hover { background: #FFE4E6; }
+    transition: 0.2s;
+    &:hover { background: ${Colors.danger}; color: white; }
   }
 `;
 
 const CartFooter = styled.div`
   padding: 24px;
-  background: #F8FAFC;
-  border-top: 1px solid #F1F5F9;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid ${Colors.border};
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 `;
 
 const SummaryRow = styled.div<{ total?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  span { color: #64748B; font-size: 0.9rem; font-weight: 600; }
+  span { color: ${Colors.textMuted}; font-size: 1rem; font-weight: 600; }
   strong { 
-    color: ${props => props.total ? '#1E293B' : '#475569'}; 
-    font-size: ${props => props.total ? '1.5rem' : '1rem'};
+    color: ${Colors.textMain}; 
+    font-size: ${props => props.total ? '1.8rem' : '1.1rem'};
     font-weight: 800;
   }
 `;
 
 const ActionButton = styled.button`
   width: 100%;
-  background: #4F46E5;
+  background: ${Colors.primary};
   color: white;
   border: none;
-  padding: 16px;
+  padding: 18px;
   border-radius: 16px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 10px 15px -3px rgba(0, 70, 255, 0.3);
   transition: all 0.2s;
 
-  &:hover { background: #4338CA; transform: translateY(-1px); }
-  &:disabled { background: #CBD5E1; cursor: not-allowed; box-shadow: none; transform: none; }
+  &:hover { background: ${Colors.primaryHover}; transform: translateY(-1px); }
+  &:disabled { background: ${Colors.border}; color: ${Colors.textMuted}; cursor: not-allowed; box-shadow: none; transform: none; }
 `;
 
-// --- Modal ---
 const Overlay = styled(motion.div)`
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center; z-index: 1000;
 `;
 
 const ModalCard = styled(motion.div)`
-  background: white; padding: 32px; border-radius: 28px;
-  width: 100%; max-width: 440px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  background: ${Colors.cardBg}; padding: 32px; border-radius: 28px;
+  width: 100%; max-width: 440px; border: 1px solid ${Colors.border};
 `;
 
 const Select = styled.select`
   width: 100%;
-  padding: 14px;
+  padding: 16px;
   border-radius: 12px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid ${Colors.border};
+  background: ${Colors.inputBg};
+  color: white;
   margin: 16px 0 24px 0;
   font-size: 1rem;
   outline: none;
-  &:focus { border-color: #4F46E5; }
+  &:focus { border-color: ${Colors.primary}; }
 `;
 
 const PDV: React.FC = () => {
@@ -241,25 +256,15 @@ const PDV: React.FC = () => {
   const removeFromCart = (cartId: number) => setCart(cart.filter(item => item.cartId !== cartId));
   const total = useMemo(() => cart.reduce((acc, curr) => acc + curr.preco, 0), [cart]);
 
-  const handleFinalize = () => {
-    if (!selectedClient) return alert("Selecione um cliente!");
-    alert(`Sucesso! Venda de R$ ${total.toFixed(2)} vinculada a ${selectedClient}`);
-    setCart([]);
-    setSelectedClient('');
-    setShowModal(false);
-  };
-
   return (
     <Container>
       <GlobalStyle />
       <Sidebar />
       <MainContent>
-        <Header>
-          <div>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Vendas / PDV</h1>
-            <p style={{ color: '#64748B', marginTop: 4 }}>Frente de caixa operacional rápida</p>
-          </div>
-        </Header>
+        <header style={{ marginBottom: 32 }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Vendas / PDV 🛒</h1>
+          <p style={{ color: Colors.textMuted, marginTop: 4 }}>Frente de caixa operacional rápida</p>
+        </header>
 
         <ContentLayout>
           <ProductsArea>
@@ -273,7 +278,7 @@ const PDV: React.FC = () => {
                 >
                   <div className="icon-wrapper">{p.icon}</div>
                   <h4>{p.nome}</h4>
-                  <strong>R$ {p.preco.toFixed(2)}</strong>
+                  <strong>{money.format(p.preco)}</strong>
                 </ProductCard>
               ))}
             </ProductGrid>
@@ -286,9 +291,10 @@ const PDV: React.FC = () => {
             <CartList>
               <AnimatePresence>
                 {cart.length === 0 && (
-                  <p style={{ color: '#94A3B8', textAlign: 'center', marginTop: 40, fontSize: '0.9rem' }}>
-                    Carrinho vazio.<br/>Selecione os produtos ao lado.
-                  </p>
+                  <div style={{ color: Colors.textMuted, textAlign: 'center', marginTop: 60, fontSize: '0.9rem' }}>
+                    <p>Carrinho vazio.</p>
+                    <p style={{ opacity: 0.6, marginTop: 4 }}>Selecione os produtos ao lado.</p>
+                  </div>
                 )}
                 {cart.map(item => (
                   <CartItem 
@@ -299,7 +305,7 @@ const PDV: React.FC = () => {
                   >
                     <div className="info">
                       <span>{item.nome}</span>
-                      <small>R$ {item.preco.toFixed(2)}</small>
+                      <small>{money.format(item.preco)}</small>
                     </div>
                     <button onClick={() => removeFromCart(item.cartId)}>✕</button>
                   </CartItem>
@@ -309,10 +315,10 @@ const PDV: React.FC = () => {
             <CartFooter>
               <SummaryRow total>
                 <span>Total</span>
-                <strong>R$ {total.toFixed(2)}</strong>
+                <strong>{money.format(total)}</strong>
               </SummaryRow>
               <ActionButton disabled={cart.length === 0} onClick={() => setShowModal(true)}>
-                Vincular Cliente
+                Finalizar Venda
               </ActionButton>
             </CartFooter>
           </CartContainer>
@@ -324,19 +330,26 @@ const PDV: React.FC = () => {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setShowModal(false)}
             >
-              <ModalCard onClick={e => e.stopPropagation()}>
+              <ModalCard onClick={e => e.stopPropagation()} initial={{ scale: 0.9 }} animate={{ scale: 1 }}>
                 <h2 style={{ fontWeight: 800 }}>Finalizar Venda</h2>
-                <p style={{ color: '#64748B', marginTop: 8 }}>Vincular itens ao histórico do cliente</p>
+                <p style={{ color: Colors.textMuted, marginTop: 8 }}>Vincular itens ao histórico do cliente</p>
                 
+                <div style={{ background: Colors.inputBg, padding: 20, borderRadius: 16, margin: '24px 0' }}>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <span style={{ color: Colors.textMuted }}>Total a pagar:</span>
+                      <strong style={{ color: Colors.primary, fontSize: '1.2rem' }}>{money.format(total)}</strong>
+                   </div>
+                </div>
+
                 <Select value={selectedClient} onChange={e => setSelectedClient(e.target.value)}>
                   <option value="">Selecione um cliente...</option>
                   {clientes.map(c => <option key={c} value={c}>{c}</option>)}
                 </Select>
 
-                <ActionButton onClick={handleFinalize}>Confirmar e Salvar</ActionButton>
+                <ActionButton onClick={() => setShowModal(false)}>Confirmar Recebimento</ActionButton>
                 <button 
                   onClick={() => setShowModal(false)}
-                  style={{ width: '100%', background: 'none', border: 'none', color: '#94A3B8', marginTop: 20, cursor: 'pointer', fontWeight: 600 }}
+                  style={{ width: '100%', background: 'none', border: 'none', color: Colors.textMuted, marginTop: 20, cursor: 'pointer', fontWeight: 600 }}
                 >
                   Voltar ao carrinho
                 </button>

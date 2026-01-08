@@ -3,9 +3,28 @@ import styled, { createGlobalStyle } from 'styled-components';
 import Sidebar from './sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// --- Variáveis de Design (Alinhadas ao SAS Dark) ---
+const Colors = {
+  primary: '#0046FF',
+  primaryHover: '#0036C7',
+  bgDark: '#0B0D10',
+  cardBg: '#16191E',
+  inputBg: '#1E2229',
+  textMain: '#FFFFFF',
+  textMuted: '#94A3B8',
+  border: '#2D343F',
+  success: '#10B981',
+  danger: '#EF4444',
+};
+
 const GlobalStyle = createGlobalStyle`
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background-color: #F8FAFC; font-family: 'Inter', sans-serif; color: #1E293B; }
+  body { 
+    background-color: ${Colors.bgDark}; 
+    font-family: 'Inter', sans-serif; 
+    color: ${Colors.textMain}; 
+    -webkit-font-smoothing: antialiased;
+  }
 `;
 
 const Container = styled.div` display: flex; min-height: 100vh; `;
@@ -19,21 +38,24 @@ const Header = styled.div`
 `;
 
 const SearchBar = styled.input`
-  padding: 12px 20px;
+  padding: 14px 20px;
   border-radius: 14px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid ${Colors.border};
+  background: ${Colors.cardBg};
+  color: white;
   width: 350px;
   outline: none;
   transition: all 0.2s;
-  &:focus { border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+  &::placeholder { color: ${Colors.textMuted}; }
+  &:focus { border-color: ${Colors.primary}; box-shadow: 0 0 0 3px rgba(0, 70, 255, 0.1); }
 `;
 
 const TableCard = styled.div`
-  background: white;
+  background: ${Colors.cardBg};
   border-radius: 24px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid ${Colors.border};
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 `;
 
 const Table = styled.table`
@@ -44,60 +66,69 @@ const Table = styled.table`
 
 const Th = styled.th`
   padding: 20px;
-  background: #F8FAFC;
-  color: #64748B;
+  background: rgba(255, 255, 255, 0.02);
+  color: ${Colors.textMuted};
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  border-bottom: 1px solid #E2E8F0;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid ${Colors.border};
 `;
 
 const Td = styled.td`
-  padding: 20px;
-  border-bottom: 1px solid #F1F5F9;
+  padding: 18px 20px;
+  border-bottom: 1px solid ${Colors.border};
   font-size: 0.9rem;
+  color: ${Colors.textMain};
 `;
 
 const StockBadge = styled.span<{ low: boolean }>`
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 700;
-  background: ${props => props.low ? '#FEF2F2' : '#DCFCE7'};
-  color: ${props => props.low ? '#EF4444' : '#166534'};
+  background: ${props => props.low ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)'};
+  color: ${props => props.low ? Colors.danger : Colors.success};
+  border: 1px solid ${props => props.low ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)'};
 `;
 
-const ActionButton = styled.button<{ variant?: 'edit' | 'adjust' }>`
-  background: ${props => props.variant === 'adjust' ? '#F8FAFC' : '#EEF2FF'};
-  color: ${props => props.variant === 'adjust' ? '#64748B' : '#4F46E5'};
-  border: none;
+const ActionButton = styled.button`
+  background: ${Colors.inputBg};
+  color: ${Colors.textMuted};
+  border: 1px solid transparent;
   padding: 8px 14px;
   border-radius: 10px;
   font-weight: 600;
-  margin-right: 8px;
   cursor: pointer;
   transition: all 0.2s;
-  &:hover { opacity: 0.8; transform: translateY(-1px); }
+  &:hover { 
+    background: ${Colors.primary}; 
+    color: white;
+    transform: translateY(-1px);
+  }
 `;
 
 const Overlay = styled(motion.div)`
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center; z-index: 1000;
 `;
 
 const ModalCard = styled(motion.div)`
-  background: white; padding: 32px; border-radius: 28px;
+  background: ${Colors.cardBg}; padding: 32px; border-radius: 28px;
   width: 100%; max-width: 550px;
   max-height: 90vh; overflow-y: auto;
+  border: 1px solid ${Colors.border};
 `;
 
 const FormGroup = styled.div`
-  display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;
-  label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+  display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;
+  label { font-size: 0.75rem; font-weight: 700; color: ${Colors.textMuted}; text-transform: uppercase; letter-spacing: 0.05em; }
   input, select { 
-    padding: 12px; border-radius: 12px; border: 1px solid #E2E8F0; 
-    &:focus { outline: none; border-color: #4F46E5; }
+    padding: 14px; border-radius: 12px; border: 1px solid ${Colors.border}; 
+    background: ${Colors.inputBg}; color: white; outline: none;
+    transition: 0.2s;
+    &:focus { border-color: ${Colors.primary}; }
   }
 `;
 
@@ -106,7 +137,6 @@ const Estoque: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
-  // Dados Mock atualizados com Código e Marca
   const estoqueData = [
     { id: 1, codigo: "PRD-001", marca: "L'Oréal", nome: "Shampoo Pós-Química 1L", qtd: 5, min: 10, custo: 45.00, venda: 0.00 },
     { id: 2, codigo: "PRD-002", marca: "Keune", nome: "Cera Modeladora Matte", qtd: 24, min: 5, custo: 15.00, venda: 45.00 },
@@ -134,8 +164,8 @@ const Estoque: React.FC = () => {
       <MainContent>
         <Header>
           <div>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Estoque</h1>
-            <p style={{ color: '#64748B' }}>Controle de custos, margens e reposição</p>
+            <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Estoque 📦</h1>
+            <p style={{ color: Colors.textMuted, marginTop: 4 }}>Controle de custos, margens e reposição</p>
           </div>
           <div style={{ display: 'flex', gap: '16px' }}>
             <SearchBar 
@@ -145,7 +175,7 @@ const Estoque: React.FC = () => {
             />
             <button 
               onClick={() => handleOpenModal()}
-              style={{ background: '#4F46E5', color: '#FFF', border: 'none', padding: '12px 24px', borderRadius: 14, fontWeight: 700, cursor: 'pointer' }}
+              style={{ background: Colors.primary, color: '#FFF', border: 'none', padding: '12px 24px', borderRadius: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 10px 15px -3px rgba(0, 70, 255, 0.3)' }}
             >
               + Novo Produto
             </button>
@@ -158,10 +188,10 @@ const Estoque: React.FC = () => {
               <tr>
                 <Th>Produto</Th>
                 <Th>Marca</Th>
-                <Th>Qtd Atual</Th>
-                <Th>P. Custo</Th>
-                <Th>P. Venda</Th>
-                <Th>Margem (%)</Th>
+                <Th>Status Estoque</Th>
+                <Th>Custo</Th>
+                <Th>Venda</Th>
+                <Th>Margem</Th>
                 <Th>Ações</Th>
               </tr>
             </thead>
@@ -172,17 +202,17 @@ const Estoque: React.FC = () => {
                   <tr key={p.id}>
                     <Td>
                       <div style={{ fontWeight: 700 }}>{p.nome}</div>
-                      <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>#{p.codigo}</div>
+                      <div style={{ fontSize: '0.75rem', color: Colors.textMuted, marginTop: 2 }}>#{p.codigo}</div>
                     </Td>
                     <Td>
-                      <span style={{ background: '#F1F5F9', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600 }}>
+                      <span style={{ background: Colors.inputBg, padding: '6px 10px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, border: `1px solid ${Colors.border}` }}>
                         {p.marca}
                       </span>
                     </Td>
                     <Td><StockBadge low={p.qtd <= p.min}>{p.qtd} un.</StockBadge></Td>
-                    <Td style={{ color: '#64748B' }}>R$ {p.custo.toFixed(2)}</Td>
-                    <Td style={{ fontWeight: 600 }}>{p.venda > 0 ? `R$ ${p.venda.toFixed(2)}` : "Uso Interno"}</Td>
-                    <Td style={{ color: p.venda > 0 ? '#10B981' : '#94A3B8', fontWeight: 700 }}>
+                    <Td style={{ color: Colors.textMuted }}>R$ {p.custo.toFixed(2)}</Td>
+                    <Td style={{ fontWeight: 600 }}>{p.venda > 0 ? `R$ ${p.venda.toFixed(2)}` : <span style={{color: Colors.textMuted, fontSize: '0.8rem'}}>Uso Interno</span>}</Td>
+                    <Td style={{ color: p.venda > 0 ? Colors.success : Colors.textMuted, fontWeight: 800 }}>
                         {p.venda > 0 ? `${margem}%` : "-"}
                     </Td>
                     <Td>
@@ -198,52 +228,53 @@ const Estoque: React.FC = () => {
         <AnimatePresence>
           {showModal && (
             <Overlay initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowModal(false)}>
-              <ModalCard onClick={e => e.stopPropagation()} initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}>
-                <h2 style={{ marginBottom: '24px', fontWeight: 800 }}>{selectedProduct ? 'Editar Produto' : 'Novo Produto'}</h2>
+              <ModalCard onClick={e => e.stopPropagation()} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+                <h2 style={{ marginBottom: '8px', fontWeight: 800 }}>{selectedProduct ? 'Editar Produto' : 'Novo Produto'}</h2>
+                <p style={{ color: Colors.textMuted, marginBottom: 24 }}>Gerencie a entrada e precificação de itens.</p>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <FormGroup>
-                    <label>Código SKU / Referência</label>
-                    <input type="text" defaultValue={selectedProduct?.codigo} placeholder="Ex: PRD-001" />
+                    <label>Código SKU</label>
+                    <input type="text" defaultValue={selectedProduct?.codigo} placeholder="PRD-000" />
                   </FormGroup>
                   <FormGroup>
                     <label>Marca</label>
-                    <input type="text" defaultValue={selectedProduct?.marca} placeholder="Ex: L'Oréal" />
+                    <input type="text" defaultValue={selectedProduct?.marca} placeholder="Ex: Wella" />
                   </FormGroup>
                 </div>
 
                 <FormGroup>
                   <label>Nome do Produto</label>
-                  <input type="text" defaultValue={selectedProduct?.nome} placeholder="Ex: Shampoo Especial" />
+                  <input type="text" defaultValue={selectedProduct?.nome} placeholder="Ex: Shampoo" />
                 </FormGroup>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <FormGroup>
-                    <label>Preço de Custo (R$)</label>
-                    <input type="number" defaultValue={selectedProduct?.custo} placeholder="0.00" />
+                    <label>Custo (R$)</label>
+                    <input type="number" defaultValue={selectedProduct?.custo} />
                   </FormGroup>
                   <FormGroup>
-                    <label>Preço de Venda (R$)</label>
-                    <input type="number" defaultValue={selectedProduct?.venda} placeholder="0.00 (0 para uso interno)" />
+                    <label>Venda (R$)</label>
+                    <input type="number" defaultValue={selectedProduct?.venda} />
                   </FormGroup>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <FormGroup>
-                    <label>Quantidade em Estoque</label>
-                    <input type="number" defaultValue={selectedProduct?.qtd} placeholder="0" />
+                    <label>Qtd em Estoque</label>
+                    <input type="number" defaultValue={selectedProduct?.qtd} />
                   </FormGroup>
                   <FormGroup>
-                    <label>Quantidade Mínima</label>
-                    <input type="number" defaultValue={selectedProduct?.min} placeholder="Aviso de reposição" />
+                    <label>Alerta de Reposição (Min)</label>
+                    <input type="number" defaultValue={selectedProduct?.min} />
                   </FormGroup>
                 </div>
 
                 <button 
                   onClick={() => setShowModal(false)}
-                  style={{ width: '100%', background: '#4F46E5', color: 'white', border: 'none', padding: '16px', borderRadius: 16, fontWeight: 700, cursor: 'pointer', marginTop: '10px' }}
+                  style={{ width: '100%', background: Colors.primary, color: 'white', border: 'none', padding: '16px', borderRadius: 16, fontWeight: 700, cursor: 'pointer', marginTop: '10px' }}
                 >
-                  Salvar Produto
+                  Salvar no Inventário
                 </button>
               </ModalCard>
             </Overlay>
